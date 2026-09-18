@@ -156,6 +156,47 @@
   }
   .poop-fact b { display: block; color: #e8b877; margin-bottom: 4px; font-size: 1rem; }
   .poop-fact p { font-size: 0.9rem; color: #cbb99e; }
+
+  .gb-form {
+    margin-top: 32px; background: var(--card); border: 1px solid var(--sand);
+    border-radius: 20px; padding: 24px; display: grid; gap: 12px;
+  }
+  .gb-form input, .gb-form textarea {
+    font: inherit; color: var(--dark); background: var(--bg);
+    border: 1px solid var(--sand); border-radius: 12px; padding: 12px 15px; width: 100%;
+  }
+  .gb-form textarea { min-height: 96px; resize: vertical; }
+  .gb-form input:focus, .gb-form textarea:focus {
+    outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent);
+  }
+  .gb-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .gb-form button {
+    background: var(--brown); color: #fff; border: none; border-radius: 999px;
+    padding: 11px 28px; font: inherit; font-weight: 700; cursor: pointer; transition: 0.2s;
+  }
+  .gb-form button:hover { background: var(--dark); }
+  .gb-form button:disabled { opacity: 0.6; cursor: wait; }
+  .gb-status { font-size: 0.85rem; color: var(--muted); }
+  .gb-count { margin-top: 26px; font-size: 0.88rem; font-weight: 700; color: var(--muted); }
+  .gb-list { margin-top: 12px; display: grid; gap: 12px; }
+  .gb-item {
+    background: var(--card); border: 1px solid var(--sand); border-radius: 16px;
+    padding: 16px 18px; display: flex; gap: 13px;
+  }
+  .gb-avatar {
+    flex: none; width: 38px; height: 38px; border-radius: 50%;
+    background: var(--sand); color: var(--brown); font-weight: 800;
+    display: flex; align-items: center; justify-content: center; font-size: 0.95rem;
+  }
+  .gb-body { min-width: 0; flex: 1; }
+  .gb-head { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+  .gb-name { font-weight: 800; font-size: 0.95rem; }
+  .gb-time { font-size: 0.78rem; color: var(--muted); }
+  .gb-msg { margin-top: 3px; font-size: 0.95rem; overflow-wrap: break-word; white-space: pre-wrap; }
+  .gb-empty {
+    text-align: center; color: var(--muted); padding: 34px 20px;
+    background: var(--card); border: 1px dashed var(--sand); border-radius: 16px;
+  }
   .feature-grid {
     margin-top: 38px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px;
   }
@@ -234,6 +275,7 @@
       <a href="#life">라이프스타일</a>
       <a href="#features">특징</a>
       <a href="#poop">정육면체 똥</a>
+      <a href="#guestbook">댓글</a>
     </div>
   </div>
 </nav>
@@ -480,6 +522,24 @@
   </div>
 </section>
 
+<section id="guestbook">
+  <div class="section-inner">
+    <span class="kicker">GUESTBOOK</span>
+    <h2>웜뱃에게 한마디</h2>
+    <p class="section-sub">귀여운 웜뱃에게 응원의 메시지를 남겨보세요. 로그인 없이 누구나 작성할 수 있어요.</p>
+    <form class="gb-form" id="gb-form">
+      <input type="text" id="gb-name" maxlength="30" placeholder="닉네임 (비워두면 '익명의 웜뱃')">
+      <textarea id="gb-message" maxlength="500" required placeholder="웜뱃에게 한마디 남겨보세요..."></textarea>
+      <div class="gb-row">
+        <span class="gb-status" id="gb-status"></span>
+        <button type="submit" id="gb-submit">댓글 남기기</button>
+      </div>
+    </form>
+    <p class="gb-count" id="gb-count"></p>
+    <div class="gb-list" id="gb-list"></div>
+  </div>
+</section>
+
 <section id="finale">
   <div class="section-inner finale">
     <span class="kicker">BONUS</span>
@@ -494,6 +554,108 @@
 <footer>
   <p>웜뱃월드 — 정보와 사진 출처: <a href="https://en.wikipedia.org/wiki/Wombat">Wikipedia (Wombat)</a> · <a href="https://en.wikipedia.org/wiki/Wombat_feces">Wikipedia (Wombat feces)</a> · <a href="https://commons.wikimedia.org/wiki/Category:Wombat_feces">Wikimedia Commons</a></p>
 </footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const gb = window.supabase.createClient(
+    "https://cdkzuadsqonsvtmlefng.supabase.co",
+    "sb_publishable_nkiaw8nuzs27jQE_SAK5Gg_rFXQSxFa"
+  );
+
+  const formEl = document.getElementById("gb-form");
+  const nameEl = document.getElementById("gb-name");
+  const msgEl = document.getElementById("gb-message");
+  const listEl = document.getElementById("gb-list");
+  const countEl = document.getElementById("gb-count");
+  const statusEl = document.getElementById("gb-status");
+  const submitBtn = document.getElementById("gb-submit");
+
+  function timeAgo(iso) {
+    const diff = Date.now() - new Date(iso).getTime();
+    const m = Math.floor(diff / 60000);
+    if (m < 1) return "방금 전";
+    if (m < 60) return m + "분 전";
+    const h = Math.floor(m / 60);
+    if (h < 24) return h + "시간 전";
+    const d = Math.floor(h / 24);
+    if (d < 30) return d + "일 전";
+    return new Date(iso).toLocaleDateString("ko-KR");
+  }
+
+  function render(comments) {
+    listEl.textContent = "";
+    if (!comments.length) {
+      const empty = document.createElement("div");
+      empty.className = "gb-empty";
+      empty.textContent = "아직 댓글이 없어요. 첫 번째 댓글의 주인공이 되어보세요!";
+      listEl.appendChild(empty);
+      return;
+    }
+    for (const c of comments) {
+      const item = document.createElement("div");
+      item.className = "gb-item";
+      const avatar = document.createElement("div");
+      avatar.className = "gb-avatar";
+      const name = c.name || "익명의 웜뱃";
+      avatar.textContent = name.charAt(0).toUpperCase();
+      const body = document.createElement("div");
+      body.className = "gb-body";
+      const head = document.createElement("div");
+      head.className = "gb-head";
+      const nameSpan = document.createElement("span");
+      nameSpan.className = "gb-name";
+      nameSpan.textContent = name;
+      const timeSpan = document.createElement("span");
+      timeSpan.className = "gb-time";
+      timeSpan.textContent = timeAgo(c.created_at);
+      head.appendChild(nameSpan);
+      head.appendChild(timeSpan);
+      const msg = document.createElement("div");
+      msg.className = "gb-msg";
+      msg.textContent = c.message;
+      body.appendChild(head);
+      body.appendChild(msg);
+      item.appendChild(avatar);
+      item.appendChild(body);
+      listEl.appendChild(item);
+    }
+  }
+
+  async function loadComments() {
+    const { data, error } = await gb
+      .from("comments")
+      .select("name, message, created_at")
+      .order("created_at", { ascending: false })
+      .limit(100);
+    if (error) {
+      statusEl.textContent = "댓글을 불러오지 못했어요. 잠시 후 새로고침해 주세요.";
+      return;
+    }
+    const { count } = await gb.from("comments").select("*", { count: "exact", head: true });
+    countEl.textContent = count > 0 ? "총 " + count + "개의 댓글" : "";
+    render(data);
+  }
+
+  formEl.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    const name = nameEl.value.trim() || "익명의 웜뱃";
+    const message = msgEl.value.trim();
+    if (!message) return;
+    submitBtn.disabled = true;
+    statusEl.textContent = "전송 중...";
+    const { error } = await gb.from("comments").insert({ name: name, message: message });
+    submitBtn.disabled = false;
+    if (error) {
+      statusEl.textContent = "전송에 실패했어요. 다시 시도해 주세요.";
+      return;
+    }
+    statusEl.textContent = "";
+    msgEl.value = "";
+    loadComments();
+  });
+
+  loadComments();
+</script>
 
 </body>
 </html>
