@@ -80,6 +80,24 @@
   .stat b { display: block; font-size: 1.5rem; color: var(--brown); letter-spacing: -0.02em; }
   .stat span { font-size: 0.85rem; color: var(--muted); font-weight: 600; }
 
+  .fact-bar { max-width: 1080px; margin: 0 auto; padding: 0 24px 48px; }
+  .fact-card {
+    background: var(--card); border: 1px solid var(--sand); border-radius: 18px;
+    padding: 20px 24px; display: flex; gap: 18px; align-items: center;
+    justify-content: space-between; flex-wrap: wrap;
+  }
+  .fact-label {
+    display: inline-block; padding: 4px 12px; border-radius: 999px;
+    background: #e5ecda; color: var(--green); font-size: 0.75rem;
+    font-weight: 800; letter-spacing: 0.05em; margin-bottom: 8px;
+  }
+  .fact-text { font-size: 1.05rem; font-weight: 600; }
+  .fact-card button {
+    flex: none; background: var(--sand); color: var(--brown); border: none; border-radius: 999px;
+    padding: 9px 20px; font: inherit; font-weight: 700; cursor: pointer; transition: 0.2s;
+  }
+  .fact-card button:hover { background: var(--accent); color: #fff; }
+
   section { padding: 72px 24px; }
   .section-inner { max-width: 1080px; margin: 0 auto; }
   .kicker {
@@ -300,6 +318,16 @@
   <div class="stat"><b>20~35 kg</b><span>몸무게</span></div>
   <div class="stat"><b>8~14일</b><span>한 끼 소화 시간</span></div>
   <div class="stat"><b>최대 30년+</b><span>수명 (사육 환경)</span></div>
+</div>
+
+<div class="fact-bar">
+  <div class="fact-card">
+    <div>
+      <span class="fact-label">오늘의 웜뱃 상식</span>
+      <p class="fact-text" id="fact-text">웜뱃 상식을 불러오는 중...</p>
+    </div>
+    <button type="button" id="fact-refresh">다른 상식 보기</button>
+  </div>
 </div>
 
 <section id="intro">
@@ -621,7 +649,21 @@
     }
   }
 
+  let useApi = true;
+
   async function loadComments() {
+    if (useApi) {
+      try {
+        const res = await fetch("/api/comments");
+        if (!res.ok) throw new Error("api unavailable");
+        const data = await res.json();
+        countEl.textContent = data.length > 0 ? "총 " + data.length + "개의 댓글" : "";
+        render(data);
+        return;
+      } catch (err) {
+        useApi = false;
+      }
+    }
     const { data, error } = await gb
       .from("comments")
       .select("name, message, created_at")
@@ -636,6 +678,20 @@
     render(data);
   }
 
+  async function postComment(name, message) {
+    if (useApi) {
+      const res = await fetch("/api/comments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: name, message: message })
+      });
+      if (!res.ok) throw new Error("전송 실패");
+      return;
+    }
+    const { error } = await gb.from("comments").insert({ name: name, message: message });
+    if (error) throw new Error("전송 실패");
+  }
+
   formEl.addEventListener("submit", async function (e) {
     e.preventDefault();
     const name = nameEl.value.trim() || "익명의 웜뱃";
@@ -643,18 +699,47 @@
     if (!message) return;
     submitBtn.disabled = true;
     statusEl.textContent = "전송 중...";
-    const { error } = await gb.from("comments").insert({ name: name, message: message });
-    submitBtn.disabled = false;
-    if (error) {
+    try {
+      await postComment(name, message);
+      statusEl.textContent = "";
+      msgEl.value = "";
+      loadComments();
+    } catch (err) {
       statusEl.textContent = "전송에 실패했어요. 다시 시도해 주세요.";
-      return;
     }
-    statusEl.textContent = "";
-    msgEl.value = "";
-    loadComments();
+    submitBtn.disabled = false;
   });
 
   loadComments();
+
+  const FALLBACK_FACTS = [
+    "웜뱃은 지구상에서 유일하게 정육면체 똥을 누는 동물입니다.",
+    "웜뱃과 가장 가까운 친척은 코알라입니다.",
+    "웜뱃의 육아낭은 뒤쪽을 향해 열려서 굴을 팔 때 흙이 들어가지 않습니다.",
+    "웜뱃은 하루에 약 16시간을 잡니다.",
+    "매년 10월 22일은 '웜뱃의 날'입니다.",
+    "웜뱃은 짧은 거리에서 시속 40km까지 달릴 수 있습니다."
+  ];
+  const factTextEl = document.getElementById("fact-text");
+  const factBtn = document.getElementById("fact-refresh");
+
+  function showFact(fact) {
+    factTextEl.textContent = fact;
+  }
+
+  async function loadFact() {
+    try {
+      const res = await fetch("/api/fact");
+      if (!res.ok) throw new Error();
+      const data = await res.json();
+      showFact(data.fact);
+    } catch (err) {
+      showFact(FALLBACK_FACTS[Math.floor(Math.random() * FALLBACK_FACTS.length)]);
+    }
+  }
+
+  factBtn.addEventListener("click", loadFact);
+  loadFact();
 </script>
 
 </body>
