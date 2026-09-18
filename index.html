@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>웜뱃 월드 — 호주의 귀여운 굴 파는 유대류</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+  :root {
+    --bg: #faf5ee;
+    --card: #ffffff;
+    --brown: #8b5e3c;
+    --dark: #3e2c1e;
+    --sand: #e8d9c3;
+    --green: #6b7d4f;
+    --accent: #c98a4b;
+    --muted: #7a6a58;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: "Pretendard Variable", Pretendard, "Segoe UI", "Malgun Gothic", sans-serif;
+    background: var(--bg);
+    color: var(--dark);
+    line-height: 1.7;
+  }
+  img { max-width: 100%; display: block; }
+
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(250, 245, 238, 0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--sand);
+  }
+  .nav-inner {
+    max-width: 1080px; margin: 0 auto; padding: 14px 24px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  }
+  .logo { font-weight: 800; font-size: 1.25rem; color: var(--brown); letter-spacing: -0.02em; }
+  .logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 4px; flex-wrap: wrap; }
+  .nav-links a {
+    text-decoration: none; color: var(--muted); font-size: 0.92rem; font-weight: 600;
+    padding: 7px 13px; border-radius: 999px; transition: 0.2s;
+  }
+  .nav-links a:hover { background: var(--sand); color: var(--dark); }
+
+  .hero {
+    max-width: 1080px; margin: 0 auto; padding: 56px 24px 40px;
+    display: grid; grid-template-columns: 1.1fr 1fr; gap: 44px; align-items: center;
+  }
+  .hero h1 {
+    font-size: clamp(2.2rem, 5vw, 3.4rem); font-weight: 800; line-height: 1.25;
+    letter-spacing: -0.03em;
+  }
+  .hero h1 em { font-style: normal; color: var(--brown); }
+  .hero p.lead { margin-top: 18px; font-size: 1.08rem; color: var(--muted); }
+  .hero .tagline {
+    display: inline-block; margin-bottom: 16px; padding: 6px 16px;
+    background: var(--sand); color: var(--brown); border-radius: 999px;
+    font-size: 0.85rem; font-weight: 700;
+  }
+  .hero-photo { position: relative; }
+  .hero-photo img {
+    border-radius: 24px; box-shadow: 0 20px 50px rgba(62, 44, 30, 0.22);
+    aspect-ratio: 4 / 3; object-fit: cover; width: 100%;
+  }
+  .hero-photo figcaption {
+    margin-top: 10px; font-size: 0.78rem; color: var(--muted); text-align: right;
+  }
+
+  .stats {
+    max-width: 1080px; margin: 8px auto 0; padding: 0 24px 56px;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+  }
+  .stat {
+    background: var(--card); border: 1px solid var(--sand); border-radius: 18px;
+    padding: 18px 20px; text-align: center;
+  }
+  .stat b { display: block; font-size: 1.5rem; color: var(--brown); letter-spacing: -0.02em; }
+  .stat span { font-size: 0.85rem; color: var(--muted); font-weight: 600; }
+
+  section { padding: 72px 24px; }
+  .section-inner { max-width: 1080px; margin: 0 auto; }
+  .kicker {
+    display: inline-block; padding: 5px 14px; border-radius: 999px;
+    background: var(--card); border: 1px solid var(--sand);
+    color: var(--green); font-size: 0.8rem; font-weight: 800; letter-spacing: 0.06em;
+    margin-bottom: 14px;
+  }
+  h2 { font-size: clamp(1.7rem, 3.5vw, 2.3rem); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 14px; }
+  .section-sub { color: var(--muted); font-size: 1.02rem; max-width: 640px; }
+
+  .split {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center;
+    margin-top: 36px;
+  }
+  .split .photo img {
+    border-radius: 22px; box-shadow: 0 16px 40px rgba(62, 44, 30, 0.16);
+    aspect-ratio: 4 / 3; object-fit: cover; width: 100%;
+  }
+  .split .photo figcaption { margin-top: 9px; font-size: 0.78rem; color: var(--muted); text-align: right; }
+  .split.reverse .photo { order: 2; }
+  .split.reverse .text { order: 1; }
+
+  .point-list { margin-top: 20px; display: grid; gap: 14px; }
+  .point {
+    display: flex; gap: 14px; align-items: flex-start;
+    background: var(--card); border: 1px solid var(--sand);
+    border-radius: 16px; padding: 15px 18px;
+  }
+  .point .num {
+    flex: none; width: 30px; height: 30px; border-radius: 10px;
+    background: var(--sand); color: var(--brown);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 0.9rem; margin-top: 2px;
+  }
+  .point b { display: block; font-size: 1rem; margin-bottom: 2px; }
+  .point p { font-size: 0.92rem; color: var(--muted); }
+
+  #features { background: linear-gradient(180deg, #f3ead9 0%, var(--bg) 100%); }
+  .feature p a { color: var(--brown); font-weight: 700; }
+
+  #poop { background: var(--dark); color: #f3ead9; }
+  #poop .kicker { background: rgba(243, 234, 217, 0.07); border-color: rgba(243, 234, 217, 0.22); color: #e8b877; }
+  #poop h2 { color: #fdf7ec; }
+  #poop .section-sub { color: #cbb99e; }
+  #poop .point { background: rgba(243, 234, 217, 0.06); border-color: rgba(243, 234, 217, 0.16); }
+  #poop .point .num { background: rgba(243, 234, 217, 0.14); color: #e8b877; }
+  #poop .point p { color: #cbb99e; }
+  #poop .split .photo figcaption { color: #a2917a; }
+  .poop-hero { margin-top: 38px; }
+  .poop-hero img {
+    width: 100%; aspect-ratio: 21 / 10; object-fit: cover;
+    border-radius: 24px; box-shadow: 0 26px 60px rgba(0, 0, 0, 0.45);
+  }
+  .poop-hero figcaption { margin-top: 10px; font-size: 0.78rem; color: #a2917a; text-align: right; }
+  .poop-stats { margin-top: 18px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .poop-stat {
+    background: rgba(243, 234, 217, 0.06); border: 1px solid rgba(243, 234, 217, 0.16);
+    border-radius: 18px; padding: 18px 20px; text-align: center;
+  }
+  .poop-stat b { display: block; font-size: 1.5rem; color: #e8b877; letter-spacing: -0.02em; }
+  .poop-stat span { font-size: 0.85rem; color: #cbb99e; font-weight: 600; }
+  .poop-h3 { margin-top: 64px; color: #fdf7ec; font-size: 1.4rem; letter-spacing: -0.02em; }
+  .poop-gallery { margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .poop-gallery img {
+    border-radius: 18px; width: 100%; aspect-ratio: 4 / 3; object-fit: cover;
+    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.4);
+  }
+  .poop-gallery figcaption { margin-top: 8px; font-size: 0.78rem; color: #a2917a; text-align: right; }
+  .poop-facts { margin-top: 24px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .poop-fact {
+    background: rgba(243, 234, 217, 0.06); border: 1px solid rgba(243, 234, 217, 0.16);
+    border-radius: 16px; padding: 18px 20px;
+  }
+  .poop-fact b { display: block; color: #e8b877; margin-bottom: 4px; font-size: 1rem; }
+  .poop-fact p { font-size: 0.9rem; color: #cbb99e; }
+  .feature-grid {
+    margin-top: 38px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px;
+  }
+  .feature {
+    background: var(--card); border: 1px solid var(--sand); border-radius: 20px;
+    padding: 26px 24px; transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .feature:hover { transform: translateY(-4px); box-shadow: 0 14px 34px rgba(62, 44, 30, 0.12); }
+  .feature .icon {
+    width: 46px; height: 46px; border-radius: 14px; background: var(--sand);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem; margin-bottom: 16px;
+  }
+  .feature h3 { font-size: 1.08rem; margin-bottom: 8px; letter-spacing: -0.01em; }
+  .feature p { font-size: 0.9rem; color: var(--muted); }
+
+  .map-wrap {
+    margin-top: 34px; background: var(--card); border: 1px solid var(--sand);
+    border-radius: 22px; padding: 26px; display: grid;
+    grid-template-columns: 420px 1fr; gap: 30px; align-items: center;
+  }
+  .map-wrap img { border-radius: 14px; border: 1px solid var(--sand); }
+  .map-wrap figcaption { margin-top: 8px; font-size: 0.78rem; color: var(--muted); text-align: center; }
+
+  .species { margin-top: 38px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .species-card {
+    background: var(--card); border: 1px solid var(--sand); border-radius: 18px; padding: 22px;
+  }
+  .species-card .badge {
+    display: inline-block; font-size: 0.72rem; font-weight: 800; padding: 4px 10px;
+    border-radius: 999px; margin-bottom: 10px; letter-spacing: 0.03em;
+  }
+  .badge.ok { background: #e5ecda; color: var(--green); }
+  .badge.warn { background: #f6e0d0; color: #b0552a; }
+  .species-card h3 { font-size: 1.02rem; margin-bottom: 6px; }
+  .species-card p { font-size: 0.87rem; color: var(--muted); }
+
+  .finale {
+    text-align: center; max-width: 720px; margin: 0 auto;
+  }
+  .finale .big { font-size: clamp(1.6rem, 3.5vw, 2.1rem); font-weight: 800; letter-spacing: -0.03em; }
+  .finale p { margin-top: 14px; color: var(--muted); }
+
+  footer {
+    border-top: 1px solid var(--sand); padding: 30px 24px 40px; text-align: center;
+    font-size: 0.8rem; color: var(--muted);
+  }
+  footer a { color: var(--brown); }
+
+  @media (max-width: 880px) {
+    .hero, .split, .split.reverse { grid-template-columns: 1fr; gap: 28px; }
+    .split.reverse .photo, .split.reverse .text { order: initial; }
+    .hero { padding-top: 36px; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .feature-grid { grid-template-columns: 1fr; }
+    .poop-stats { grid-template-columns: repeat(2, 1fr); }
+    .poop-gallery { grid-template-columns: 1fr; }
+    .poop-facts { grid-template-columns: 1fr; }
+    .poop-hero img { aspect-ratio: 16 / 10; }
+    .map-wrap { grid-template-columns: 1fr; }
+    .map-wrap img { width: 100%; }
+    .species { grid-template-columns: 1fr; }
+    section { padding: 52px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="logo">웜뱃<span>월드</span></div>
+    <div class="nav-links">
+      <a href="#intro">웜뱃이란?</a>
+      <a href="#diet">먹이</a>
+      <a href="#habitat">서식지</a>
+      <a href="#life">라이프스타일</a>
+      <a href="#features">특징</a>
+      <a href="#poop">정육면체 똥</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div>
+    <span class="tagline">오스트레일리아 고유의 유대류</span>
+    <h1>땅속의 귀염둥이,<br><em>웜뱃</em>을 만나보세요</h1>
+    <p class="lead">
+      통통한 몸에 짧은 다리, 작은 눈과 둥근 귀. 곰을 닮은 듯한 외모의 웜뱃은
+      캥거루·코알라와 같은 유대류 가족으로, 호주의 숲과 초원 지하에 요새 같은 굴을 짓고 삽니다.
+    </p>
+  </div>
+  <figure class="hero-photo">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/1/18/Vombatus_ursinus_-Maria_Island_National_Park.jpg" alt="태즈메이니아 매리아 섬의 일반 웜뱃">
+    <figcaption>태즈메이니아 매리아 섬 국립공원의 일반 웜뱃 · 사진: Wikimedia Commons</figcaption>
+  </figure>
+</header>
+
+<div class="stats">
+  <div class="stat"><b>약 1 m</b><span>몸길이</span></div>
+  <div class="stat"><b>20~35 kg</b><span>몸무게</span></div>
+  <div class="stat"><b>8~14일</b><span>한 끼 소화 시간</span></div>
+  <div class="stat"><b>최대 30년+</b><span>수명 (사육 환경)</span></div>
+</div>
+
+<section id="intro">
+  <div class="section-inner">
+    <span class="kicker">ABOUT</span>
+    <h2>웜뱃이란?</h2>
+    <p class="section-sub">
+      웜뱃(Wombat)은 유대목 웜뱃과(Vombatidae)에 속하는 포유류로, 이름은 시드니 지역 원주민의 다루그어에서 왔습니다.
+      굴을 파는 습성 때문에 초기 정착민들에게 "오소리(badger)"라고 불리기도 했어요.
+    </p>
+    <div class="split">
+      <figure class="photo">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/9/96/Wombat-Narawntapu.jpg" alt="태즈메이니아 나라운타푸 국립공원의 웜뱃">
+        <figcaption>나라운타푸 국립공원의 태즈메이니아 웜뱃 · 사진: Wikimedia Commons</figcaption>
+      </figure>
+      <div class="text">
+        <div class="point-list">
+          <div class="point"><div class="num">1</div><div><b>유대류의 친척</b><p>새끼를 육아낭에서 키우는 유대류로, 코알라와 가장 가까운 친척입니다.</p></div></div>
+          <div class="point"><div class="num">2</div><div><b>흙에 어울리는 외모</b><p>모래색부터 갈색, 회색, 검은색까지. 두툼한 털가죽과 근육질의 통통한 몸을 가졌어요.</p></div></div>
+          <div class="point"><div class="num">3</div><div><b>느긋한 장수</b><p>야생에서는 보통 15년 안팎, 사육 환경에서는 30년을 넘긴 개체도 있습니다.</p></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="species">
+      <div class="species-card">
+        <span class="badge ok">Least Concern</span>
+        <h3>일반 웜뱃</h3>
+        <p>맨코웜뱃이라고도 불려요. 호주 남동부와 태즈메이니아 전역에 넓게 분포합니다.</p>
+      </div>
+      <div class="species-card">
+        <span class="badge warn">Critically Endangered</span>
+        <h3>북방털코웜뱃</h3>
+        <p>현생 포유류 중 가장 위험한 멸종 위기종 중 하나로, 퀸즐랜드의 단 두 곳에만 남아 있어요.</p>
+      </div>
+      <div class="species-card">
+        <span class="badge ok">Near Threatened</span>
+        <h3>남방털코웜뱃</h3>
+        <p>세 종 중 가장 작은 종. 남호주의 건조한 지역에서 삽니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="diet">
+  <div class="section-inner">
+    <span class="kicker">DIET</span>
+    <h2>뭘 먹고 사나?</h2>
+    <p class="section-sub">웜뱃은 100% 초식동물입니다.</p>
+    <div class="split reverse">
+      <figure class="photo">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/A235%2C_Ballarat_Wildlife_Park%2C_Ballarat%2C_Australia%2C_wombats%2C_2007.JPG" alt="동물원에서 먹이를 먹는 웜뱃 어미와 새끼">
+        <figcaption>함께 밥을 먹는 웜뱃 어미와 새끼 · 사진: Wikimedia Commons</figcaption>
+      </figure>
+      <div class="text">
+        <div class="point-list">
+          <div class="point"><div class="num">1</div><div><b>주 메뉴는 풀</b><p>각종 풀과 사초, 허브류가 주식이고, 나무껍질과 뿌리도 갉아 먹어요.</p></div></div>
+          <div class="point"><div class="num">2</div><div><b>쥐 같은 앞니</b><p>설치류를 닮은 앞니로 질긴 식물을 잘라냅니다. 이빨에는 뿌리가 없어 평생 자라요.</p></div></div>
+          <div class="point"><div class="num">3</div><div><b>초슬로우 식품</b><p>대사가 극도로 느려 소화에 8~14일이 걸립니다. 건조한 환경에서 최대한 오래 버티는 생존 전략이에요.</p></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="habitat">
+  <div class="section-inner">
+    <span class="kicker">HABITAT</span>
+    <h2>어디에 사나?</h2>
+    <p class="section-sub">웜뱃은 오스트레일리아 고유종입니다.</p>
+    <figure class="map-wrap">
+      <div>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/63/Vombatidae_distribution.png" alt="웜뱃과 분포 지도">
+        <figcaption>웜뱃과의 분포 · Wikimedia Commons</figcaption>
+      </div>
+      <div class="text">
+        <div class="point-list">
+          <div class="point"><div class="num">1</div><div><b>호주 남부와 동부</b><p>숲, 산악 지대, 히스 황무지 등 다양한 환경에 적응해 살며, 태즈메이니아 섬에도 분포합니다.</p></div></div>
+          <div class="point"><div class="num">2</div><div><b>고립 개체군</b><p>북방털코웜뱃은 퀸즐랜드 에핑 포레스트 국립공원의 약 300헥타르 구역 등 딱 두 곳에만 남아 있어요.</p></div></div>
+          <div class="point"><div class="num">3</div><div><b>지하의 집</b><p>숲이든 초원이든, 웜뱃의 진짜 집은 땅속입니다. 서식지 하부는 굴 네트워크로 가득해요.</p></div></div>
+        </div>
+      </div>
+    </figure>
+  </div>
+</section>
+
+<section id="life">
+  <div class="section-inner">
+    <span class="kicker">LIFESTYLE</span>
+    <h2>뭘 하면서 사나?</h2>
+    <p class="section-sub">해가 지면 웜뱃의 하루가 시작됩니다.</p>
+    <div class="point-list" style="margin-top: 34px;">
+      <div class="point"><div class="num">1</div><div><b>밤에 활동하는 은둔자</b><p>주로 밤과 해질 녘에 활동하고, 흐리거나 서늘한 낮에는 나와서 먹이를 찾기도 합니다.</p></div></div>
+      <div class="point"><div class="num">2</div><div><b>엔지니어급 굴 파기</b><p>강한 앞발톱과 앞니로 수십 미터에 이르는 대규모 굴 시스템을 팝니다. 굴은 흙 30cm 아래의 안전하고 서늘한 은신처예요.</p></div></div>
+      <div class="point"><div class="num">3</div><div><b>혼자만의 영역</b><p>기본적으로 단독 생활을 하며, 굴 중심의 영역을 지키고 침입자에게는 단호하게 맞섭니다.</p></div></div>
+      <div class="point"><div class="num">4</div><div><b>엉덩이 방어술</b><p>딩고나 태즈메이니아데빌에게 쫓기면 굴로 도망쳐 엉덩이로 입구를 막아버립니다.</p></div></div>
+      <div class="point"><div class="num">5</div><div><b>육아낭 속 아기</b><p>20~30일의 임신 기간 뒤 태어난 새끼는 육아낭에서 6~7개월을 보내고, 젖을 떼는 건 15개월쯤부터입니다.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="section-inner">
+    <span class="kicker">UNIQUE</span>
+    <h2>웜뱃만의 특징</h2>
+    <p class="section-sub">웜뱃을 웜뱃답게 만드는, 세상에 하나뿐인 스펙들.</p>
+    <div class="feature-grid">
+      <div class="feature">
+        <div class="icon">🟫</div>
+        <h3>정육면체 똥의 주인공</h3>
+        <p>지구상 유일하게 깍지 모양 배설물을 누는 동물. 놀라운 비밀과 큼직한 사진은 <a href="#poop">아래 특집</a>에서 공개합니다.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">🛡</div>
+        <h3>방패가 된 엉덩이</h3>
+        <p>엉덩이 살 대부분이 두꺼운 연골로 이루어져 있어 천적의 이빨을 막아냅니다. 꼬리가 거의 없어 잡을 것도 없죠.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">🎒</div>
+        <h3>뒤로 향한 육아낭</h3>
+        <p>웜뱃의 육아낭은 뒤쪽을 향해 열립니다. 굴을 팔 때 흙이 날려도 새끼가 있는 주머니 안은 흙투성이가 되지 않도록 진화한 것.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">🦷</div>
+        <h3>평생 자라는 이빨</h3>
+        <p>모든 이빨에 뿌리가 없어 쥐처럼 평생 자랍니다. 질긴 풀을 갉아 먹으며 자연스럽게 닳는 대로 계속 자라나요.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">⚡</div>
+        <h3>숏다리 스프린터</h3>
+        <p>무뚝뚝해 보이는 짧은 다리지만, 짧은 거리라면 시속 40km까지 내달릴 수 있습니다.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">💡</div>
+        <h3>UV 빛에 형광 반짝</h3>
+        <p>2020년 발견된 사실로, 자외선을 비추면 웜뱃의 털이 청록색으로 형광을 냅니다.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">🐢</div>
+        <h3>초절정 느린 소화</h3>
+        <p>먹이가 몸속을 다 통과하는 데 8~14일. 물과 영양을 아껴 쓰는 사막 생존 비법입니다.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">😴</div>
+        <h3>하루 16시간 수면</h3>
+        <p>게으름이 아니라 에너지를 아끼는 전략. 느린 대사와 함께 건조한 땅을 버티는 비법입니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="poop">
+  <div class="section-inner">
+    <span class="kicker">POOP SPECIAL</span>
+    <h2>전설의 정육면체 똥</h2>
+    <p class="section-sub">
+      웜뱃 이야기에서 절대 빼놓을 수 없는 세기의 발명품, 정육면체 똥.
+      지구상에서 큐브 모양 똥을 누는 유일한 동물이 바로 웜뱃입니다.
+    </p>
+    <figure class="poop-hero">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Wombat_Poop_Uncropped.jpg" alt="바위 위에 놓인 웜뱃의 정육면체 똥">
+      <figcaption>바위 위에 놓인 웜뱃 똥 · 사진: Wikimedia Commons</figcaption>
+    </figure>
+    <div class="poop-stats">
+      <div class="poop-stat"><b>80~100개</b><span>하루 밤 배설량</span></div>
+      <div class="poop-stat"><b>약 2cm</b><span>한 개의 크기</span></div>
+      <div class="poop-stat"><b>44종</b><span>똥 속 화학 물질</span></div>
+      <div class="poop-stat"><b>약 10m</b><span>웜뱃의 소장 길이</span></div>
+    </div>
+
+    <h3 class="poop-h3">왜 하필 각진 모양일까?</h3>
+    <div class="split">
+      <figure class="photo">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/3/30/Wombat_%28Vombatus_ursinus%29_poo.jpg" alt="웜뱃의 정육면체 배설물">
+        <figcaption>웜뱃(Vombatus ursinus)의 배설물 · 사진: Wikimedia Commons</figcaption>
+      </figure>
+      <div class="text">
+        <div class="point-list">
+          <div class="point"><div class="num">1</div><div><b>정사각 항문은 오해였다</b><p>2018년까지는 "항문 괄약근이 네모나서" 그런 것이라 믿어졌지만, 미국물리학회 유체역학 분과의 연구로 진짜 이유가 밝혀졌어요.</p></div></div>
+          <div class="point"><div class="num">2</div><div><b>똥은 장 안에서 변신한다</b><p>약 10m 길이의 소장을 통과하는 동안 처음 75% 구간에서는 죽처럼 흐물흐물한 액체 상태입니다.</p></div></div>
+          <div class="point"><div class="num">3</div><div><b>마지막 8%에서 큐브 완성</b><p>마지막 25% 구간에서 단단해지기 시작하고, 최종 8% 구간에서 장벽의 탄성 있는 두 줄의 홈이 불규칙하게 수축하며 모서리를 만듭니다.</p></div></div>
+          <div class="point"><div class="num">4</div><div><b>건조가 만드는 마법</b><p>2023년 후속 연구에 따르면 장 구간마다 수분이 빠져나가는 속도가 달라, 변의 길이와 각도가 정교하게 결정됩니다.</p></div></div>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="poop-h3">똥은 웜뱃의 SNS</h3>
+    <div class="split reverse">
+      <figure class="photo">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c6/Certified_Wombat_Faeces.jpg" alt="정육면체 형태가 뚜렷한 웜뱃 배설물">
+        <figcaption>정육면체 형태가 뚜렷한 웜뱃 배설물 · 사진: Wikimedia Commons</figcaption>
+      </figure>
+      <div class="text">
+        <div class="point-list">
+          <div class="point"><div class="num">1</div><div><b>잘 보이는 곳에 배설</b><p>바위, 계단, 통나무 위처럼 눈에 띄는 곳에다 여러 웜뱃이 함께 쓰는 '공용 화장실'에 모아 배설합니다.</p></div></div>
+          <div class="point"><div class="num">2</div><div><b>굴러가지 않는 큐브</b><p>동그란 똥은 경사만 있으면 데굴데굴 굴러가지만 큐브는 제자리에 쌓입니다. 영역 표시와 구애 표현에 최적화된 모양이에요.</p></div></div>
+          <div class="point"><div class="num">3</div><div><b>냄새로 대화한다</b><p>2025년 연구에 따르면 웜뱃은 똥 냄새를 구비신경기관(코 속 냄새 감각기관)으로 맡아 서로 정보를 주고받습니다.</p></div></div>
+          <div class="point"><div class="num">4</div><div><b>캥거루 똥과 구별법</b><p>동부회색캥거루 똥과 크기·색이 비슷하지만 캥거루 똥은 동글동글해요. 참고로 아픈 웜뱃의 똥은 모서리가 뭉툭해집니다.</p></div></div>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="poop-h3">똥 사진 더 구경하기</h3>
+    <div class="poop-gallery">
+      <figure>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/0/0d/Wombat_%28Vombatus_ursinus%29_Poo.jpg" alt="1파운드 동전 옆에 놓인 웜뱃 똥 두 개">
+        <figcaption>1파운드 동전 옆의 웜뱃 똥 — 실제 크기 감이 오시나요? · 사진: Wikimedia Commons</figcaption>
+      </figure>
+      <figure>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c2/Wombat_Faeces.jpg" alt="웜뱃의 큐브 배설물">
+        <figcaption>흙 위에 놓인 웜뱃의 큐브 배설물 · 사진: Wikimedia Commons</figcaption>
+      </figure>
+    </div>
+
+    <div class="poop-facts">
+      <div class="poop-fact"><b>꽤 찐한 수분 조절</b><p>웜뱃 똥의 수분은 약 65%. 인간 똥(75%)이나 소똥(85~90%)보다 훨씬 건조해서 모서리가 흐트러지지 않고 유지됩니다.</p></div>
+      <div class="poop-fact"><b>24종의 웜뱃파리 서식지</b><p>웜뱃 똥은 적어도 24종의 파리에게 최고의 주거지예요. 작은 큐브 하나가 하나의 작은 생태계입니다.</p></div>
+      <div class="poop-fact"><b>똥으로 만든 종이</b><p>2009년 태즈메이니아 버니의 한 공장이 웜뱃 똥으로 종이를 만들기 시작해 화제가 됐습니다.</p></div>
+      <div class="poop-fact"><b>이그노벨상 수상 주제</b><p>큐브 똥의 비밀을 밝힌 연구진은 2019년 이그노벨 물리학상과 함께 (지금은 없는) 10조 짐바브웨 달러 상금을 받았습니다.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="finale">
+  <div class="section-inner finale">
+    <span class="kicker">BONUS</span>
+    <p class="big">매년 10월 22일은 "웜뱃의 날"</p>
+    <p>
+      2005년부터 팬들이 정한 비공식 기념일이에요. 웜뱃은 2000년 시드니 올림픽의 비공식 마스코트
+      "팻소(Fatso)"로도 사랑받았고, 호주 곳곳의 지명과 조각상에도 등장하는 국민 동물입니다.
+    </p>
+  </div>
+</section>
+
+<footer>
+  <p>웜뱃월드 — 정보와 사진 출처: <a href="https://en.wikipedia.org/wiki/Wombat">Wikipedia (Wombat)</a> · <a href="https://en.wikipedia.org/wiki/Wombat_feces">Wikipedia (Wombat feces)</a> · <a href="https://commons.wikimedia.org/wiki/Category:Wombat_feces">Wikimedia Commons</a></p>
+</footer>
+
+</body>
+</html>
